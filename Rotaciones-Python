@@ -1,0 +1,98 @@
+import numpy as np
+from astropy import units as u
+from numpy import matrix
+
+#Dato: los vectores matriciales son por fila, no por columna
+#Horizontales y ecuatoriales locales, rotacion con y fijo 
+
+#Ingresar la latitud a rotar en radianes
+#Multplicar los grados por pi/180
+phi=2*np.pi/9.
+print("Angulo de rotacion:", phi)
+#definimos las matrices de rotacion 
+Rdiry=matrix([[np.cos(np.pi/2 + phi),0,-np.sin(np.pi/2 + phi)],[0,1,0],[np.sin(np.pi/2 + phi),0,np.cos(np.pi/2 + phi)]])
+Rrety=matrix([[np.cos(np.pi/2 + phi),0,np.sin(np.pi/2 + phi)],[0,1,0],[-np.sin(np.pi/2 + phi),0,np.cos(np.pi/2 + phi)]])
+
+#comentar lo que no sea necesario
+
+#Horizontales a e.locales
+#vector horizontal
+h=np.pi
+A=0.6
+Vh=matrix([[np.cos(h)*np.cos(A)],[-np.cos(h)*np.sin(A)],[np.sin(h)]])
+print("Hallamos el vector de coordenadas ecuatoriales locales")
+Velr=Rrety*Vh
+print(Velr)
+#averiguar como tomar elementos de una matriz para operar
+
+#E.locales a horizontal
+delta=np.pi/2 - 0.409025715
+t=5*np.pi/12.
+Vel=matrix([[np.cos(delta)*np.cos(t)],[-np.cos(delta)*np.sin(t)],[np.sin(delta)]])
+print("Hallamos el vector de coordenadas horizontales")
+Vhr=Rdiry*Vel
+print(Vhr)
+
+(Aclaracion: a partir de acá se usa otra celda de python)
+
+#Pasaje entre ecuatoriales locales y absolutas
+#Ingresa TSL en radianes
+#multiplcar la hora por pi/12
+
+tsl=4.080575428
+print("angulo de rotacion", tsl)
+
+
+Rdirz=matrix([[np.cos(tsl),np.sin(tsl),0],[-np.sin(tsl),np.cos(tsl),0],[0,0,1]])
+
+Rretz=matrix([[np.cos(tsl),-np.sin(tsl),0],[np.sin(tsl),np.cos(tsl),0],[0,0,1]])
+
+
+#Locales a absolutas
+#def vector local 2
+delta2=0
+t2=0
+Vel2=matrix([[np.cos(delta2)*np.cos(t2)],[-np.cos(delta2)*np.sin(t2)],[np.sin(delta2)]])
+Vecr=Rretz*Vel2
+print("el vector de coordenas ecuatoriales celestes es")
+print(Vecr)
+
+#Celestes a locales
+#def vector celeste 1
+delta3=-0.2294162095
+alpha=3.767829152
+
+Vec=matrix([[np.cos(delta3)*np.cos(alpha)],[np.cos(delta3)*np.sin(alpha)],[np.sin(delta3)]])
+print(Vec)
+Velr2=Rdirz*Vec
+print("el vector de coordenas ecuatoriales locales es")
+print(Velr2)
+
+
+(Aclaracion: a partir de acá se usa otra celda de python)
+
+#Pasaje de celestes a eclipticales
+#e es un numero fijo (oblicuidad de la eclip)
+e=0
+
+Rdirx=matrix([[1,0,0],[0,np.cos(e),np.sin(e)],[0,-np.sin(e),np.cos(e)]])
+Rretx=matrix([[1,0,0],[0,np.cos(e),-np.sin(e)],[0,np.sin(e),np.cos(e)]])
+
+#Celestes a ecpliticales
+#def vector celeste
+delta4=0
+alpha2=0
+Vec2=matrix([[np.cos(delta4)*np.cos(alpha2)],[np.cos(delta4)*np.sin(alpha2)],[np.sin(delta4)]])
+Vsr=Rdirx*Vec2 #vector ecplitical
+print("el vector de coordenas eclipticales es")
+print(Vsr)
+
+
+#Ecpliticales a celestes
+#def vector celeste
+beta=0
+l=0
+Vs=matrix([[np.cos(beta)*np.cos(l)],[np.cos(beta)*np.sin(l)],[np.sin(beta)]])
+Vecr2=Rretx*Vs
+print("el vector de coordenas ecuatoriales celestes es")
+print(Vecr2)
